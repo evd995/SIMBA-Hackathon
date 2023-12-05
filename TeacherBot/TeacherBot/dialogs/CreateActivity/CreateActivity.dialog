@@ -1,0 +1,169 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "7D4VuX",
+    "name": "CreateActivity",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "4sHQou"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.ChoiceInput",
+          "$designer": {
+            "id": "8XXarD",
+            "comment": ""
+          },
+          "defaultLocale": "en-us",
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": true,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "choiceOptions": {
+            "includeNumbers": true,
+            "inlineOrMore": ", or ",
+            "inlineOr": " or ",
+            "inlineSeparator": ", "
+          },
+          "recognizerOptions": {
+            "recognizeOrdinals": true,
+            "recognizeNumbers": true
+          },
+          "property": "dialog.activity_goal",
+          "choices": [
+            "How are you feeling with the course?",
+            "Is there something that you are not understanding with which you need help?",
+            "Do you like the rhythm of the course?",
+            "Other"
+          ],
+          "prompt": "${ChoiceInput_Prompt_8XXarD()}"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "UzMdCJ"
+          },
+          "condition": "= (dialog.activity_goal == 'Other') || (turn.activity.text == 'Other')  || (turn.activity.text == 'other') ",
+          "actions": [
+            {
+              "$kind": "Microsoft.TextInput",
+              "$designer": {
+                "id": "7lHVVd"
+              },
+              "disabled": false,
+              "maxTurnCount": 3,
+              "alwaysPrompt": false,
+              "allowInterruptions": false,
+              "unrecognizedPrompt": "",
+              "defaultValueResponse": "",
+              "prompt": "${TextInput_Prompt_7lHVVd()}",
+              "property": "dialog.activity_goal"
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.ConfirmInput",
+          "$designer": {
+            "id": "cukXgX"
+          },
+          "defaultLocale": "en-us",
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "prompt": "${ConfirmInput_Prompt_cukXgX()}",
+          "choiceOptions": {
+            "includeNumbers": true
+          },
+          "property": "dialog.goal_confirmation"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "JHYeR2"
+          },
+          "condition": "=dialog.goal_confirmation",
+          "actions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "OQQz65"
+              },
+              "activity": "${SendActivity_OQQz65()}"
+            },
+            {
+              "$kind": "Microsoft.HttpRequest",
+              "$designer": {
+                "id": "GrtmDT"
+              },
+              "resultProperty": "turn.results",
+              "method": "POST",
+              "url": "https://simba-hackathon-functions.azurewebsites.net/api/create_activity",
+              "body": {
+                "goal": "${dialog.activity_goal}"
+              }
+            },
+            {
+              "$kind": "Microsoft.IfCondition",
+              "$designer": {
+                "id": "1dXsJq"
+              },
+              "condition": "= turn.results.statusCode == 200",
+              "actions": [
+                {
+                  "$kind": "Microsoft.SendActivity",
+                  "$designer": {
+                    "id": "LWAa9A"
+                  },
+                  "activity": "${SendActivity_LWAa9A()}"
+                }
+              ],
+              "elseActions": [
+                {
+                  "$kind": "Microsoft.SendActivity",
+                  "$designer": {
+                    "id": "PLvYwO"
+                  },
+                  "activity": "${SendActivity_PLvYwO()}"
+                }
+              ]
+            }
+          ],
+          "elseActions": [
+            {
+              "$kind": "Microsoft.RepeatDialog",
+              "$designer": {
+                "id": "bonKD1"
+              },
+              "activityProcessed": true
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.BeginDialog",
+          "$designer": {
+            "id": "0LlLEF"
+          },
+          "activityProcessed": true,
+          "dialog": "ChooseIntent"
+        }
+      ]
+    }
+  ],
+  "generator": "CreateActivity.lg",
+  "recognizer": "CreateActivity.lu.qna",
+  "id": "CreateActivity"
+}

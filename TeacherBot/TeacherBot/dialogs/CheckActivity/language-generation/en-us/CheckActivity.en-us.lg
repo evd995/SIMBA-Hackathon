@@ -1,0 +1,9 @@
+[import](common.lg)
+
+# SendActivity_VTg77x()
+[Activity
+    Text = ${SendActivity_VTg77x_text()}
+]
+
+# SendActivity_VTg77x_text()
+- Checking

@@ -1,0 +1,89 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "nXzZqy",
+    "name": "ChooseIntent",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "fcDYMc"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.ChoiceInput",
+          "$designer": {
+            "id": "NSWNEy"
+          },
+          "defaultLocale": "en-us",
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "choiceOptions": {
+            "includeNumbers": true,
+            "inlineOrMore": ", or ",
+            "inlineOr": " or ",
+            "inlineSeparator": ", "
+          },
+          "property": "dialog.userChoice",
+          "prompt": "${ChoiceInput_Prompt_NSWNEy()}",
+          "recognizerOptions": {
+            "recognizeOrdinals": true
+          },
+          "choices": [
+            "Create activity",
+            "Check activity"
+          ]
+        },
+        {
+          "$kind": "Microsoft.SwitchCondition",
+          "$designer": {
+            "id": "l5KtRS"
+          },
+          "condition": "dialog.userChoice",
+          "cases": [
+            {
+              "value": "Create activity",
+              "actions": [
+                {
+                  "$kind": "Microsoft.BeginDialog",
+                  "$designer": {
+                    "id": "9e0aV8"
+                  },
+                  "activityProcessed": true,
+                  "dialog": "CreateActivity"
+                }
+              ]
+            },
+            {
+              "value": "Check activity",
+              "actions": [
+                {
+                  "$kind": "Microsoft.BeginDialog",
+                  "$designer": {
+                    "id": "ULkkmm"
+                  },
+                  "activityProcessed": true,
+                  "dialog": "CheckActivity"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "generator": "ChooseIntent.lg",
+  "recognizer": "ChooseIntent.lu.qna",
+  "id": "ChooseIntent"
+}

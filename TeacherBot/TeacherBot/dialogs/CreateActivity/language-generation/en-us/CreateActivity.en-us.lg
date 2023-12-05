@@ -1,0 +1,101 @@
+[import](common.lg)
+
+# SendActivity_7ZXkJI()
+[Activity
+    Text = ${SendActivity_7ZXkJI_text()}
+]
+
+# SendActivity_7ZXkJI_text()
+- ${dialog.activityIntent}
+# ChoiceInput_Prompt_8XXarD()
+[Activity
+    Text = ${ChoiceInput_Prompt_8XXarD_text()}
+]
+
+# ChoiceInput_Prompt_8XXarD_text()
+- Please choose the goal/theme for the activity. You can choose by sending the number of a predetermined goal or select "Other" for a custom goal.
+# AttachmentInput_Prompt_RGTyOz()
+[Activity
+    Text = ${AttachmentInput_Prompt_RGTyOz_text()}
+]
+
+# AttachmentInput_Prompt_RGTyOz_text()
+- Please upload
+# TextInput_Prompt_7lHVVd()
+[Activity
+    Text = ${TextInput_Prompt_7lHVVd_text()}
+]
+
+# TextInput_Prompt_7lHVVd_text()
+- Enter goal
+# ConfirmInput_Prompt_cukXgX()
+[Activity
+    Text = ${ConfirmInput_Prompt_cukXgX_text()}
+]
+
+# ConfirmInput_Prompt_cukXgX_text()
+- ```I will create a new activity with the goal/theme: "${dialog.activity_goal}".
+
+Is this correct?```
+# SendActivity_OQQz65()
+[Activity
+    Text = ${SendActivity_OQQz65_text()}
+]
+
+# SendActivity_OQQz65_text()
+- Creating activity, please wait a moment.
+# SendActivity_PLvYwO()
+[Activity
+    Text = ${SendActivity_PLvYwO_text()}
+]
+
+# SendActivity_PLvYwO_text()
+- ```There was an error with your response (Status code = ${turn.results.statusCode}).
+
+Please try again later.```
+# SendActivity_LWAa9A()
+[Activity
+    Attachments = ${json(SendActivity_LWAa9A_attachment_1FDdlZ())}
+]
+
+# SendActivity_LWAa9A_attachment_1FDdlZ()
+> To learn more Adaptive Cards format, read the documentation at
+> https://docs.microsoft.com/en-us/adaptive-cards/getting-started/bots
+- ```{
+    "type": "AdaptiveCard",
+    "body": [
+        {
+            "type": "TextBlock",
+            "text": "Activity Created Successfully!",
+            "weight": "Bolder",
+            "size": "Medium"
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "Your Activity ID:",
+                    "wrap": true
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "${turn.results.content.activity_id}",
+                    "size": "Medium",
+                    "weight": "Bolder",
+                    "color": "Accent",
+                    "wrap": true
+                }
+            ]
+        },
+        {
+            "type": "TextBlock",
+            "text": "You can share this ID with your students so they can interact with the bot. Please save this ID to check the students' interactions later.",
+            "wrap": true
+        }
+    ],
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.3"
+}
+
+```

@@ -1,0 +1,22 @@
+[import](common.lg)
+
+# SendActivity_lJUgZC()
+[Activity
+    Text = ${SendActivity_lJUgZC_text()}
+]
+
+# SendActivity_lJUgZC_text()
+- Here we are
+# SendActivity_UYx8Kx_text()
+- ${turn.results.content.message}
+# SendActivity_UYx8Kx()
+[Activity
+    Text = ${SendActivity_UYx8Kx_text()}
+]
+
+# SendActivity_xqknxz_text()
+- There was an error processing your message. Please try again later
+# SendActivity_xqknxz()
+[Activity
+    Text = ${SendActivity_xqknxz_text()}
+]

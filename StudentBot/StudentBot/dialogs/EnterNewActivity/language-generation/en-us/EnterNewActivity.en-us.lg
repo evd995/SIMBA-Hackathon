@@ -1,0 +1,44 @@
+[import](common.lg)
+
+# TextInput_Prompt_jw8S5P()
+[Activity
+    Text = ${TextInput_Prompt_jw8S5P_text()}
+]
+
+# TextInput_Prompt_jw8S5P_text()
+- Please enter activity ID
+# SendActivity_cIhtah()
+[Activity
+    Text = ${SendActivity_cIhtah_text()}
+]
+
+# SendActivity_cIhtah_text()
+- There was an error
+# SendActivity_KT5jlR()
+[Activity
+    Text = ${SendActivity_KT5jlR_text()}
+]
+
+# SendActivity_KT5jlR_text()
+- Starting activity. You can end the activity at any moment by writing "exit".
+# SendActivity_XydeN5_text()
+- ${turn.results.content.message}
+# SendActivity_XydeN5()
+[Activity
+    Text = ${SendActivity_XydeN5_text()}
+]
+
+# SendActivity_JTdu4J()
+[Activity
+    Text = ${SendActivity_JTdu4J_text()}
+]
+
+# SendActivity_JTdu4J_text()
+- There was an error processing your message. Please try again later
+# LogAction_Text_4B7oTJ()
+[Activity
+    Text = ${LogAction_Text_4B7oTJ_text()}
+]
+
+# LogAction_Text_4B7oTJ_text()
+- ${turn}

@@ -1,0 +1,31 @@
+[import](common.lg)
+
+# SendActivity_Greeting()
+[Activity
+    Text = ${SendActivity_Greeting_text()}
+]
+
+# SendActivity_Greeting_text()
+- Hello! 😸 I am SIMBA, your personal educational assistant.
+# SendActivity_r2g9Ot()
+[Activity
+    Text = ${SendActivity_r2g9Ot_text()}
+]
+
+# SendActivity_r2g9Ot_text()
+- ```${exists(conversation.thread_id)}
+turn```
+# SendActivity_U8RPOx()
+[Activity
+    Text = ${SendActivity_U8RPOx_text()}
+]
+
+# SendActivity_U8RPOx_text()
+- Continue conversation with message: ${turn.activity.text}
+# SendActivity_T2S1rK()
+[Activity
+    Text = ${SendActivity_T2S1rK_text()}
+]
+
+# SendActivity_T2S1rK_text()
+- turn.activity.text

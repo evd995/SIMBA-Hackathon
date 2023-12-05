@@ -1,0 +1,8 @@
+[import](common.lg)
+
+# ChoiceInput_Prompt_NSWNEy_text()
+- What can I help you with?
+# ChoiceInput_Prompt_NSWNEy()
+[Activity
+    Text = ${ChoiceInput_Prompt_NSWNEy_text()}
+]

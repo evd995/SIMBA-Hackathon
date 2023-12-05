@@ -1,0 +1,133 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "GmmCJg",
+    "name": "EnterNewActivity",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "hTqMdq"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.TextInput",
+          "$designer": {
+            "id": "jw8S5P"
+          },
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "prompt": "${TextInput_Prompt_jw8S5P()}",
+          "property": "conversation.activity_id"
+        },
+        {
+          "$kind": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "ccuJWg"
+          },
+          "resultProperty": "turn.creation_results",
+          "method": "POST",
+          "url": "https://simba-hackathon-functions.azurewebsites.net/api/create_student_conversation",
+          "body": {
+            "activity_id": "${conversation.activity_id}"
+          }
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "V0Us5D",
+            "comment": "To-do: Check status code"
+          },
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "cIhtah"
+              },
+              "activity": "${SendActivity_cIhtah()}"
+            }
+          ],
+          "actions": [
+            {
+              "$kind": "Microsoft.SetProperty",
+              "$designer": {
+                "id": "sidrsN"
+              },
+              "property": "conversation.thread_id",
+              "value": "${turn.creation_results.content.thread_id}"
+            },
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "KT5jlR"
+              },
+              "activity": "${SendActivity_KT5jlR()}"
+            },
+            {
+              "$kind": "Microsoft.HttpRequest",
+              "$designer": {
+                "id": "8EuDET"
+              },
+              "resultProperty": "turn.results",
+              "method": "POST",
+              "url": "https://simba-hackathon-functions.azurewebsites.net/api/handle_student_message",
+              "body": {
+                "thread_id": "${conversation.thread_id}",
+                "activity_id": "${conversation.activity_id}",
+                "message": "Hi"
+              }
+            },
+            {
+              "$kind": "Microsoft.IfCondition",
+              "$designer": {
+                "id": "ForAOt"
+              },
+              "actions": [
+                {
+                  "$kind": "Microsoft.SendActivity",
+                  "$designer": {
+                    "id": "XydeN5"
+                  },
+                  "activity": "${SendActivity_XydeN5()}"
+                }
+              ],
+              "elseActions": [
+                {
+                  "$kind": "Microsoft.SendActivity",
+                  "$designer": {
+                    "id": "JTdu4J",
+                    "comment": ""
+                  },
+                  "activity": "${SendActivity_JTdu4J()}"
+                },
+                {
+                  "$kind": "Microsoft.LogAction",
+                  "$designer": {
+                    "id": "4B7oTJ"
+                  },
+                  "text": "${LogAction_Text_4B7oTJ()}"
+                }
+              ],
+              "condition": "== turn.results.statusCode == 200"
+            }
+          ],
+          "condition": "= turn.creation_results.statusCode == 200"
+        }
+      ]
+    }
+  ],
+  "generator": "EnterNewActivity.lg",
+  "recognizer": "EnterNewActivity.lu.qna",
+  "id": "EnterNewActivity"
+}

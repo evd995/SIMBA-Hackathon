@@ -1,0 +1,72 @@
+{
+  "$kind": "Microsoft.AdaptiveDialog",
+  "$designer": {
+    "id": "DRQXw3",
+    "name": "ContinueConversation",
+    "comment": ""
+  },
+  "autoEndDialog": true,
+  "defaultResultProperty": "dialog.result",
+  "triggers": [
+    {
+      "$kind": "Microsoft.OnBeginDialog",
+      "$designer": {
+        "name": "BeginDialog",
+        "description": "",
+        "id": "nXY87f"
+      },
+      "actions": [
+        {
+          "$kind": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "Vrmmi2"
+          },
+          "resultProperty": "turn.results",
+          "method": "POST",
+          "url": "https://simba-hackathon-functions.azurewebsites.net/api/handle_student_message",
+          "body": {
+            "thread_id": "${conversation.thread_id}",
+            "activity_id": "${conversation.activity_id}",
+            "message": "${dialog.received_message}"
+          }
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "YSJVSe"
+          },
+          "actions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "UYx8Kx"
+              },
+              "activity": "${SendActivity_UYx8Kx()}"
+            }
+          ],
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "xqknxz",
+                "comment": ""
+              },
+              "activity": "${SendActivity_xqknxz()}"
+            },
+            {
+              "$kind": "Microsoft.LogAction",
+              "$designer": {
+                "id": "ZxAYBi"
+              },
+              "text": "${LogAction_Text_4B7oTJ()}"
+            }
+          ],
+          "condition": "== turn.results.statusCode == 200"
+        }
+      ]
+    }
+  ],
+  "generator": "ContinueConversation.lg",
+  "recognizer": "ContinueConversation.lu.qna",
+  "id": "ContinueConversation"
+}
