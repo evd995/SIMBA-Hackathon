@@ -1,39 +1,55 @@
+import azure.cosmos.documents as documents
+import azure.cosmos.cosmos_client as cosmos_client
 import azure.functions as func
 import logging
 import os
+import json
+from prompt import ASSISTANT_PROMPT
+
 
 OPENAI_KEY = os.environ['OPENAI_KEY']
+COSMOSDB_URI = os.environ['COSMOSDB_URI']
+COSMOSDB_KEY = os.environ['COSMOSDB_KEY']
+COSMOSDB_DATABASE_ID = os.environ['COSMOSDB_DATABASE_ID']
+COSMOSDB_CONTAINER_ID = os.environ['COSMOSDB_CONTAINER_ID']
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+client = cosmos_client.CosmosClient(COSMOSDB_URI, credential=COSMOSDB_KEY)
+database = client.get_database_client(COSMOSDB_DATABASE_ID)
+container = database.get_container_client(COSMOSDB_CONTAINER_ID)
 
 @app.route(route="create_activity")
 def create_activity(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     req_body = req.get_json()
-    req_body.get('goal')
+    goal = req_body.get('goal')
 
     # Create OpenAI assistant for activity
+    prompt = ASSISTANT_PROMPT.format(goal=goal)
+    assistant = client.beta.assistants.create(
+        name="SIMBA",
+        instructions=prompt,
+        tools=[{"type": "retrieval"}],
+        model="gpt-4-1106-preview"
+    )
+    activity_id = assistant.id
 
     # Save activity (assistant) ID on CosmosDB
+    activity_data = {
+        'id': activity_id,
+        'goal': goal,
+        'prompt': prompt,
+        'threads': []
+    }
+    container.create_item(activity_data)
     
-
     # Create output json with activity ID
-
-
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+    response_dict = {
+        'activity_id': activity_id
+    }
+    return func.HttpResponse(
+             json.dumps(response_dict),
              status_code=200
         )
 
@@ -45,8 +61,9 @@ def check_activity(req: func.HttpRequest) -> func.HttpResponse:
     req_body = req.get_json()
     req_body.get('activity_id')
 
-
     # Load threads
+
+    # Summarize using Azure Text Analytics
 
     return func.HttpResponse(
              "This HTTP triggered function executed successfully.",
