@@ -160,7 +160,7 @@
               "url": "https://simba-hackathon-functions.azurewebsites.net/api/create_activity",
               "body": {
                 "goal": "${dialog.activity_goal}",
-                "activity_context": "{$dialog.activity_context}."
+                "activity_context": "${dialog.activity_context}."
               }
             },
             {
