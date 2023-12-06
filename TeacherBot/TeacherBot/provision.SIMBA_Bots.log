@@ -1,0 +1,17 @@
+{
+  "profileName": "SIMBA_Bots",
+  "jobId": "8dbcc994-9f1d-4416-8875-34b2398465d4",
+  "projectId": "77846.35705862775",
+  "time": "2023-12-06T02:21:58.249Z",
+  "log": [
+    "Creating Azure resources...",
+    "Checking the Existence of the Resource Group ...",
+    "Use the Resource Group: SimbaHackathon at westus",
+    "> Creating App Registration ...",
+    "Start to add password for App, Id : f871aca0-2524-4cd3-9be4-e18f2689e06d",
+    "> Create App Registration Success! ID: f871aca0-2524-4cd3-9be4-e18f2689e06d",
+    "Deploying Web App Resource ...",
+    "Deploying Bot Resource ...",
+    "Provisioning completed successfully!"
+  ]
+}
