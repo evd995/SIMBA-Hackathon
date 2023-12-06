@@ -41,9 +41,9 @@
           },
           "property": "dialog.activity_goal",
           "choices": [
-            "How are you feeling with the course?",
-            "Is there something that you are not understanding with which you need help?",
-            "Do you like the rhythm of the course?",
+            "How are you feeling with the course? Are you satisfied with what you are learning?",
+            "What did you find most interesting about last class? Is there something you didn't understand?",
+            "Are you feeling lost with any of the topics of the course? How do you feel about the course speed?",
             "Other"
           ],
           "prompt": "${ChoiceInput_Prompt_8XXarD()}"
@@ -74,6 +74,51 @@
         {
           "$kind": "Microsoft.ConfirmInput",
           "$designer": {
+            "id": "kvvkqg"
+          },
+          "defaultLocale": "en-us",
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "prompt": "${ConfirmInput_Prompt_kvvkqg()}",
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "choiceOptions": {
+            "includeNumbers": true,
+            "inlineOrMore": ", or ",
+            "inlineOr": " or "
+          },
+          "property": "dialog.provide_context"
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "B9lEQt"
+          },
+          "condition": "= dialog.provide_context",
+          "actions": [
+            {
+              "$kind": "Microsoft.TextInput",
+              "$designer": {
+                "id": "pYKGFf"
+              },
+              "disabled": false,
+              "maxTurnCount": 3,
+              "alwaysPrompt": false,
+              "allowInterruptions": false,
+              "prompt": "${TextInput_Prompt_pYKGFf()}",
+              "unrecognizedPrompt": "",
+              "invalidPrompt": "",
+              "defaultValueResponse": "",
+              "property": "dialog.activity_context"
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.ConfirmInput",
+          "$designer": {
             "id": "cukXgX"
           },
           "defaultLocale": "en-us",
@@ -86,7 +131,8 @@
           "defaultValueResponse": "",
           "prompt": "${ConfirmInput_Prompt_cukXgX()}",
           "choiceOptions": {
-            "includeNumbers": true
+            "includeNumbers": true,
+            "inlineOrMore": ", or "
           },
           "property": "dialog.goal_confirmation"
         },
@@ -113,7 +159,8 @@
               "method": "POST",
               "url": "https://simba-hackathon-functions.azurewebsites.net/api/create_activity",
               "body": {
-                "goal": "${dialog.activity_goal}"
+                "goal": "${dialog.activity_goal}",
+                "activity_context": "{$dialog.activity_context}."
               }
             },
             {

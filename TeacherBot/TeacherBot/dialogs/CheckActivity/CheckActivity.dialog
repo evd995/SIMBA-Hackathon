@@ -17,11 +17,72 @@
       },
       "actions": [
         {
+          "$kind": "Microsoft.TextInput",
+          "$designer": {
+            "id": "cV50op",
+            "comment": ""
+          },
+          "disabled": false,
+          "maxTurnCount": 3,
+          "alwaysPrompt": false,
+          "allowInterruptions": false,
+          "unrecognizedPrompt": "",
+          "invalidPrompt": "",
+          "defaultValueResponse": "",
+          "prompt": "${TextInput_Prompt_cV50op()}",
+          "property": "dialog.activity_id"
+        },
+        {
           "$kind": "Microsoft.SendActivity",
           "$designer": {
             "id": "VTg77x"
           },
           "activity": "${SendActivity_VTg77x()}"
+        },
+        {
+          "$kind": "Microsoft.HttpRequest",
+          "$designer": {
+            "id": "wgIcFn"
+          },
+          "resultProperty": "turn.results",
+          "url": "https://simba-hackathon-functions.azurewebsites.net/api/check_activity",
+          "method": "POST",
+          "body": {
+            "activity_id": "${dialog.activity_id}"
+          }
+        },
+        {
+          "$kind": "Microsoft.IfCondition",
+          "$designer": {
+            "id": "eTwvwI"
+          },
+          "condition": "= turn.results.statusCode == 200",
+          "actions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "guSUJt"
+              },
+              "activity": "${SendActivity_guSUJt()}"
+            }
+          ],
+          "elseActions": [
+            {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "jmky01"
+              },
+              "activity": "${SendActivity_jmky01()}"
+            }
+          ]
+        },
+        {
+          "$kind": "Microsoft.BeginDialog",
+          "$designer": {
+            "id": "3zun6B"
+          },
+          "activityProcessed": true,
+          "dialog": "ChooseIntent"
         }
       ]
     }

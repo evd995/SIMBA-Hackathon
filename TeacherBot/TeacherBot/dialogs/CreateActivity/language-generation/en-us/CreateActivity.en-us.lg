@@ -36,6 +36,8 @@
 # ConfirmInput_Prompt_cukXgX_text()
 - ```I will create a new activity with the goal/theme: "${dialog.activity_goal}".
 
+The context for this activity is: "${dialog.activity_context}"
+
 Is this correct?```
 # SendActivity_OQQz65()
 [Activity
@@ -99,3 +101,25 @@ Please try again later.```
 }
 
 ```
+# TextInput_Prompt_vZDWbE()
+[Activity
+    Text = ${TextInput_Prompt_vZDWbE_text()}
+]
+
+# TextInput_Prompt_vZDWbE_text()
+- Please let me know the context of your activity. (e.g., course name, topics seen in recent classes, etc.)
+# ConfirmInput_Prompt_kvvkqg_text()
+- ```Do you want to provide me with some context for your activity (e.g., course name, topics seen in recent classes, etc.)? 
+
+This context can help me better guide the conversations with the students.```
+# ConfirmInput_Prompt_kvvkqg()
+[Activity
+    Text = ${ConfirmInput_Prompt_kvvkqg_text()}
+]
+
+# TextInput_Prompt_pYKGFf_text()
+- Please let me know the context for your activity (e.g., course name, topics seen in recent classes, etc.)
+# TextInput_Prompt_pYKGFf()
+[Activity
+    Text = ${TextInput_Prompt_pYKGFf_text()}
+]

@@ -75,6 +75,13 @@
               "activity": "${SendActivity_KT5jlR()}"
             },
             {
+              "$kind": "Microsoft.SendActivity",
+              "$designer": {
+                "id": "EUJn0J"
+              },
+              "activity": "${SendActivity_EUJn0J()}"
+            },
+            {
               "$kind": "Microsoft.HttpRequest",
               "$designer": {
                 "id": "8EuDET"

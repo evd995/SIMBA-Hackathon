@@ -1,3 +1,5 @@
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.language.conversations import ConversationAnalysisClient
 import azure.cosmos.cosmos_client as cosmos_client
 import azure.functions as func
 from openai import OpenAI
@@ -5,13 +7,15 @@ import logging
 import os
 import json
 import time
-from prompt import ASSISTANT_PROMPT
+from prompt import ASSISTANT_PROMPT, CONVERSATION_SUMMARY_PROMPT
 
 OPENAI_API_KEY = os.environ['OPENAI_KEY']
 COSMOSDB_URI = os.environ['COSMOSDB_URI']
 COSMOSDB_KEY = os.environ['COSMOSDB_KEY']
 COSMOSDB_DATABASE_ID = os.environ['COSMOSDB_DATABASE_ID']
 COSMOSDB_CONTAINER_ID = os.environ['COSMOSDB_CONTAINER_ID']
+LANGUAGE_KEY = os.environ['LANGUAGE_KEY']
+LANGUAGE_ENDPOINT = os.environ['LANGUAGE_ENDPOINT']
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 client = cosmos_client.CosmosClient(COSMOSDB_URI, credential=COSMOSDB_KEY)
@@ -28,10 +32,11 @@ def create_activity(req: func.HttpRequest) -> func.HttpResponse:
 
     req_body = req.get_json()
     goal = req_body.get('goal')
+    activity_context = req_body.get('activity_context', 'No context provided.')
 
     # Create OpenAI assistant for activity
     logging.info('Creating assistant prompt...')
-    prompt = ASSISTANT_PROMPT.format(goal=goal)
+    prompt = ASSISTANT_PROMPT.format(goal=goal, activity_context=activity_context)
     logging.info(f'Assistant prompt: {prompt}')
 
     logging.info('Creating assistant...')
@@ -72,15 +77,95 @@ def check_activity(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     req_body = req.get_json()
-    req_body.get('activity_id')
+    activity_id = req_body.get('activity_id')
+    data = container.read_item(item=activity_id, partition_key=activity_id)
+    threads = data['threads']
+    goal = data['goal']
 
     # Load threads
+    if len(threads) == 0:
+        logging.info('No threads found.')
+        response_dict = {
+            'num_conversations': 0,
+            'message': 'No conversations found.'
+        }
+        return func.HttpResponse(
+                json.dumps(response_dict),
+                status_code=200
+            )
+    
+    logging.info(f'Loading threads: {threads}')
 
-    # Summarize using Azure Text Analytics
+    conversations = []
+
+    for thread_id in threads:
+        # Get messages in thread
+        messages = oai_client.beta.threads.messages.list(thread_id = thread_id)
+        
+        # Create conversartion items
+        conversation_items = [
+            {
+                "text": msg.content[0].text.value, 
+                "id": msg.id,
+                "role": msg.role,
+                "participantId": f'STUDENT_{thread_id}' if msg.role == 'user' else 'SIMBA'
+            } for msg in messages]
+        conversation_items = conversation_items[::-1]
+        
+        # Create conversation data dict
+        conversation_data = {
+            "conversationItems": conversation_items,
+            "modality": "text",
+            "id": thread_id,
+            "language": "en",
+        }
+        
+        # Append conversation
+        conversations.append(conversation_data)
+
+    tasks = [
+        {
+            "taskName":"narrativeTask",
+            "kind":"ConversationalSummarizationTask",
+            "parameters":{"summaryAspects": ["narrative"]}
+        }
+    ]
+    
+    # Summarize conversations Azure Language Analytics
+    lang_client = ConversationAnalysisClient(LANGUAGE_ENDPOINT, AzureKeyCredential(LANGUAGE_KEY))
+    with lang_client:
+        poller = lang_client.begin_conversation_analysis({
+            "displayName": "Summarize conversations",
+            "analysisInput": {
+                "conversations": conversations
+            },
+            "tasks": tasks
+        })
+        result = poller.result()
+
+    # Give overall summary using OpenAI
+    logging.info('Creating OpenAI prompt...')
+    conversations_analysis = result['tasks']['items'][0]['results']['conversations']
+    conversation_summaries = [res['summaries'][0]['text'] for res in conversations_analysis]
+    conversations_summary_prompt = CONVERSATION_SUMMARY_PROMPT.format(conversation_summaries=conversation_summaries)
+    response = oai_client.chat.completions.create(
+        model="gpt-4-1106-preview",
+        messages=[
+            {"role": "system", "content": conversations_summary_prompt},
+            {"role": "user", "content": "Provide a summary. Focus on the students, not on SIMBA. Give one ore two short, actionable advices to the teacher on how they could proceed based on this information."},
+        ]
+     )
+    overall_summary = response.choices[0].message.content
+
+    # Create output json with overall summary
+    response_dict = {
+        'num_conversations': len(threads),
+        'message': overall_summary
+    }
 
     return func.HttpResponse(
-             "This HTTP triggered function executed successfully.",
-             status_code=200
+            json.dumps(response_dict),
+            status_code=200
         )
 
 

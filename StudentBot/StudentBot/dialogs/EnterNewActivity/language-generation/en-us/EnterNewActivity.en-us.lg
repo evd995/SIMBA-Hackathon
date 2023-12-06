@@ -20,12 +20,10 @@
 ]
 
 # SendActivity_KT5jlR_text()
-- Starting activity. You can end the activity at any moment by writing "exit".
-# SendActivity_XydeN5_text()
-- ${turn.results.content.message}
+- Loading activity...
 # SendActivity_XydeN5()
 [Activity
-    Text = ${SendActivity_XydeN5_text()}
+    Attachments = ${json(SendActivity_XydeN5_attachment_IHhoAR())}
 ]
 
 # SendActivity_JTdu4J()
@@ -42,3 +40,49 @@
 
 # LogAction_Text_4B7oTJ_text()
 - ${turn}
+# SendActivity_XydeN5_attachment_IHhoAR()
+> To learn more Adaptive Cards format, read the documentation at
+> https://docs.microsoft.com/en-us/adaptive-cards/getting-started/bots
+- ```{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.2",
+    "body": [
+        {
+            "type": "ColumnSet",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": "auto",
+                    "items": [
+                        {
+                            "type": "Image",
+                            "url": "https://i.imgur.com/OROZGTv.png",
+                            "size": "Small",
+                            "style": "Person"
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": "stretch",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "${turn.results.content.message}",
+                            "wrap": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+# SendActivity_EUJn0J()
+[Activity
+    Text = ${SendActivity_EUJn0J_text()}
+]
+
+# SendActivity_EUJn0J_text()
+- Remember you can end the activity at any moment by writing "exit".

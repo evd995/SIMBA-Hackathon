@@ -37,7 +37,8 @@
                   "$kind": "Microsoft.SendActivity",
                   "$designer": {
                     "id": "859266",
-                    "name": "Send a response"
+                    "name": "Send a response",
+                    "comment": ""
                   },
                   "activity": "${SendActivity_Greeting()}"
                 }

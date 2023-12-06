@@ -5,3 +5,4 @@
 azure-functions
 azure-cosmos
 openai
+azure-ai-language-conversations==1.1.0

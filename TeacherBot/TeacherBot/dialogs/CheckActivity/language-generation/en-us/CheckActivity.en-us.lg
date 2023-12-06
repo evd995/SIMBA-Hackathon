@@ -6,4 +6,27 @@
 ]
 
 # SendActivity_VTg77x_text()
-- Checking
+- Loading summary of students' responses...
+# TextInput_Prompt_cV50op()
+[Activity
+    Text = ${TextInput_Prompt_cV50op_text()}
+]
+
+# TextInput_Prompt_cV50op_text()
+- Please enter an activity ID
+# SendActivity_guSUJt()
+[Activity
+    Text = ${SendActivity_guSUJt_text()}
+]
+
+# SendActivity_guSUJt_text()
+- ```Number of conversations: ${turn.results.content.num_conversations}
+
+${turn.results.content.message}```
+# SendActivity_jmky01()
+[Activity
+    Text = ${SendActivity_jmky01_text()}
+]
+
+# SendActivity_jmky01_text()
+- There was an error loading the summary of the students' responses
